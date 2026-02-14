@@ -1,4 +1,10 @@
-SHELL=/bin/bash
-* * * * * bash /backupscript/backup.sh /server1files /mesbackups/ root@server1 >> /var/log/cron1.log 2>&1
-* * * * * bash /backupscript/backup.sh /server2files /mesbackups/ root@server2 >> /var/log/cron2.log 2>&1
+# 1. Le déclencheur quotidien (Fils)
+0 1 * * * root /usr/bin/rsnapshot alpha
 
+# 2. Le déclencheur hebdomadaire (Père)
+0 2 * * 1 root /usr/bin/rsnapshot beta
+
+# 3. Le déclencheur mensuel (Grand-père)
+0 3 1 * * root /usr/bin/rsnapshot gamma
+
+#

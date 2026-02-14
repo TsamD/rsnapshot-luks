@@ -1,31 +1,41 @@
 services:
   server1:
-    build:
-      context: Dockerfiles/ubuntu/.
+    build: ./Dockerfiles/ubuntu
+    container_name: server1
+    hostname: server1
+    restart: always
     volumes:
-        - ./data/server1/:/server1files
+      - ./data/server1:/server1files
+      - ./config/cron/passphrase:/run/secrets/gpg_passphrase:ro
     networks:
-      example:
-
+      - backup_luks
   server2:
-    build:
-      context: Dockerfiles/ubuntu/.
+    build: ./Dockerfiles/ubuntu
+    container_name: server2
+    hostname: server2
+    restart: always
     volumes:
-        - ./data/server2/:/server2files
+      - ./data/server2:/server2files
+      - ./config/cron/passphrase:/run/secrets/gpg_passphrase:ro
     networks:
-      example:
-  cron:
-    build:
-      context: Dockerfiles/ubuntu/.
+      - backup_luks
+  backup:
+    build: ./Dockerfiles/ubuntu
+    container_name: backup
+    hostname: backup
+    restart: always
+    cap_add:
+      - SYS_ADMIN
     volumes:
-        - ./config/cron/crontab:/backupcron
-        - ./data/backup:/mesbackups
-        - ./config/scripts:/backupscript
-        - ./config/cron/passphrase:/.passphrase
-    environment:
-        GPG_PASSPHRASE: coucou
-    command: bash -c "crontab /backupcron -u root && cron -f"
+      - ./config/rsnapshot/rsnapshot.conf:/etc/rsnapshot.conf:ro
+      - ./config/cron/crontab:/etc/cron.d/rsnapshot:ro
+      - ./config/rsnapshot:/var/log/rsnapshot:rw
+      - ./config/cron/passphrase:/run/secrets/gpg_passphrase:ro
+      - ./data/backup/snapshots:/snapshots
+      - ./config/scripts:/scripts
     networks:
-      example:
+      - backup_luks
+
 networks:
-  example:
+  backup_luks:
+    driver: bridge

@@ -1,6 +1,6 @@
 FROM ubuntu:22.04
 
-RUN apt update && apt install openssh-server sudo cron vim nano rsync gnupg uuid-runtime -y
+RUN apt update && apt install openssh-server sudo cron vim nano rsync rsnapshot gnupg uuid-runtime -y
 RUN mkdir /var/run/sshd
 COPY ./id_rsa.pub /root/.ssh/id_rsa.pub
 COPY ./id_rsa /root/.ssh/id_rsa
