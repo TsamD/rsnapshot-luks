@@ -326,7 +326,3 @@ sudo cryptsetup luksClose backup_disk
 ```
 
 ---
-
-Si tu veux, je peux aussi te faire une version encore plus “GitHub pro” avec un sommaire automatique et des ancres internes.
-```
-
