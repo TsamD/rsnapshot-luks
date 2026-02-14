@@ -9,7 +9,7 @@ In a standard GPG-based backup, every encryption cycle creates unique binary dat
 **Our Solution:**
 * **LUKS (Linux Unified Key Setup)**: The backup volume is encrypted at the block level (AES-256).
 * **Direct Pull**: Rsnapshot retrieves files directly via SSH without intermediate archiving.
-* **Result**: Total security at rest AND zero disk usage for identical files.
+* **Result**: Total security at rest AND zero disk usage for identical files across snapshots.
 
 
 ## Solution Architecture
