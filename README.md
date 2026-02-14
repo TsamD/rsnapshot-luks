@@ -157,6 +157,6 @@ ree -L 4
 │       │   └── plouf2.txt
 │       └── restore
 ├── docker-compose.yml
-└── encrypted_disk.img
-
+├── encrypted_disk.img
+└── worspace_restore
 18 directories, 13 files
