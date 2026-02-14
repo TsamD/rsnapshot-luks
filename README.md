@@ -160,3 +160,173 @@ ree -L 4
 ├── encrypted_disk.img
 └── worspace_restore
 18 directories, 13 files
+
+Voici la section complète en **Markdown propre**, prête à être copiée dans ton `README.md` du projet **rsnapshot-luks**.
+
+---
+
+````
+# Backup & Restore – Command Recap (LUKS Version)
+
+---
+
+## 1. Unlock & Mount Encrypted Volume (Host)
+
+Before starting the backup infrastructure:
+
+```bash
+sudo cryptsetup luksOpen encrypted_disk.img backup_disk
+sudo mount /dev/mapper/backup_disk ./data/backup
+sudo chown -R $USER:$USER ./data/backup
+````
+
+---
+
+## 2. Start Infrastructure
+
+```bash
+docker compose up -d --build
+```
+
+---
+
+## Rsnapshot Configuration Check
+
+```bash
+docker exec -it backup rsnapshot configtest
+```
+
+---
+
+## Test Backup (Dry Run)
+
+```bash
+docker exec -it backup rsnapshot -t alpha
+```
+
+---
+
+## Run Backup
+
+```bash
+docker exec -it backup rsnapshot alpha
+```
+
+---
+
+## Verify Snapshot Dates
+
+```bash
+docker exec -it backup ls -l /snapshots/
+```
+
+---
+
+## Verify Latest Snapshot Content
+
+```bash
+docker exec -it backup ls -R /snapshots/alpha.0/
+```
+
+---
+
+## Check Logs
+
+Show last 50 lines:
+
+```bash
+docker exec -it backup tail -n 50 /var/log/rsnapshot.log
+```
+
+Follow logs live:
+
+```bash
+docker exec -it backup tail -f /var/log/rsnapshot.log
+```
+
+---
+
+# Hardlink Deduplication Proof
+
+Run two backup cycles:
+
+```bash
+docker exec -it backup rsnapshot alpha
+docker exec -it backup rsnapshot alpha
+```
+
+Compare inodes between snapshots:
+
+```bash
+docker exec -it backup ls -li \
+/snapshots/alpha.0/server1/server1files/files/hellosrv1.txt \
+/snapshots/alpha.1/server1/server1files/files/hellosrv1.txt
+```
+
+If the inode numbers are identical, hardlink deduplication is working correctly.
+
+---
+
+# Restore Procedure (LUKS Version)
+
+## 1. Prepare Workspace (Host)
+
+```bash
+rm -rf workspace_restore/*
+cd workspace_restore
+```
+
+---
+
+## 2. Copy File from Snapshot
+
+Example: restore from `alpha.1`
+
+```bash
+cp ../data/backup/snapshots/alpha.1/server1/server1files/files/hellosrv1.txt .
+```
+
+---
+
+## 3. Verify File
+
+```bash
+ls -l
+cat hellosrv1.txt
+```
+
+---
+
+## 4. Inject File Back to Server Volume
+
+```bash
+cp hellosrv1.txt ../data/server1/restore/
+```
+
+---
+
+## 5. Verify Inside Container
+
+```bash
+docker exec -it server1 ls -l /server1files/restore/
+```
+
+---
+
+# Close Encrypted Vault (Security)
+
+When finished:
+
+```bash
+docker compose down
+sudo umount ./data/backup
+sudo cryptsetup luksClose backup_disk
+```
+
+```
+
+---
+
+Si tu veux, je peux aussi te faire une version encore plus “GitHub pro” avec un sommaire automatique et des ancres internes.
+```
+
