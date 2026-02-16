@@ -161,7 +161,6 @@ ree -L 4
 └── worspace_restore
 18 directories, 13 files
 
-Voici la section complète en **Markdown propre**, prête à être copiée dans ton `README.md` du projet **rsnapshot-luks**.
 
 ---
 
