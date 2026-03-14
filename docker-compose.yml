@@ -6,7 +6,6 @@ services:
     restart: always
     volumes:
       - ./data/server1:/server1files
-      - ./config/cron/passphrase:/run/secrets/gpg_passphrase:ro
     networks:
       - backup_luks
   server2:
@@ -16,7 +15,6 @@ services:
     restart: always
     volumes:
       - ./data/server2:/server2files
-      - ./config/cron/passphrase:/run/secrets/gpg_passphrase:ro
     networks:
       - backup_luks
   backup:
@@ -30,7 +28,6 @@ services:
       - ./config/rsnapshot/rsnapshot.conf:/etc/rsnapshot.conf:ro
       - ./config/cron/crontab:/etc/cron.d/rsnapshot:ro
       - ./config/rsnapshot:/var/log/rsnapshot:rw
-      - ./config/cron/passphrase:/run/secrets/gpg_passphrase:ro
       - ./data/backup/snapshots:/snapshots
       - ./config/scripts:/scripts
     networks:
