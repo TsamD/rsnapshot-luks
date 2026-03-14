@@ -29,7 +29,6 @@ services:
       - ./config/cron/crontab:/etc/cron.d/rsnapshot:ro
       - ./config/rsnapshot:/var/log/rsnapshot:rw
       - ./data/backup/snapshots:/snapshots
-      - ./config/scripts:/scripts
     networks:
       - backup_luks
 
